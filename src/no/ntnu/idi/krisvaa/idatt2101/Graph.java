@@ -36,10 +36,6 @@ public class Graph<T> {
 
                 Edge e = new Edge(g.nodes[to], g.nodes[from].edge1);
                 g.nodes[from].edge1 = e;
-
-                //Makes a redundant coupling to make the graph non-directional
-                e = new Edge(g.nodes[from], g.nodes[to].edge1);
-                g.nodes[to].edge1 = e;
             }
 
             return g;
@@ -79,6 +75,33 @@ public class Graph<T> {
         ((Predecessor) s.nodeData).distance = 0;
     }
 
+    private Node dfTopo(Node n, Node l) {
+        Topo_lst nd = (Topo_lst) n.nodeData;
+        if(nd.found) return l;
+        nd.found = true;
+
+        for(Edge e = n.edge1; e != null; e = e.next) {
+            l = dfTopo(e.to, l);
+        }
+
+        nd.next = l;
+        return n;
+    }
+
+    public Node topologicalSort() {
+        Node l = null;
+
+        for(Node n : nodes) {
+            n.nodeData = new Topo_lst();
+        }
+
+        for (int i = nodeCount; i-- > 0;) {
+            l = dfTopo(nodes[i], l);
+        }
+
+        return l;
+    }
+
 }
 
 class Node<T> {
@@ -98,6 +121,7 @@ class Edge {
      }
 }
 
+//Datastructure for BFS
 class Predecessor {
     public static final int infinity = 100000000;
 
@@ -115,4 +139,10 @@ class Predecessor {
     public Predecessor() {
         distance = infinity;
     }
+}
+
+//Datastructure for topological sorting
+class Topo_lst {
+    boolean found;
+    Node next;
 }

@@ -11,14 +11,14 @@ public class Main {
         //Load graph-data from file
         Graph<String> g = null;
         try {
-            g = Graph.readFromStream(new URL("http://www.iie.ntnu.no/fag/_alg/uv-graf/L7g1").openStream());
+            g = Graph.readFromStream(new URL("http://www.iie.ntnu.no/fag/_alg/uv-graf/L7g5").openStream());
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         //BFS-Traversing
-        int startNode = 5;
+        int startNode = 2;
         System.out.printf("BFS-Traversing with root-node %s: \n", startNode);
 
         g.bfs(g.nodes[startNode]);
@@ -37,6 +37,10 @@ public class Main {
             System.out.printf("%4s  %12s  %8s \n", nodeID, predecessor, distance);
         }
 
-
+        Node n = g.topologicalSort();
+        while (true) {
+            System.out.println(n.id);
+            n = ((Topo_lst)n.nodeData).next;
+        }
     }
 }
